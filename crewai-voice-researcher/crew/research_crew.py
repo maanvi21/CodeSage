@@ -7,8 +7,22 @@ tested standalone (see the __main__ block) before wiring it into LangGraph.
 import os
 from crewai import Agent, Task, Crew, Process, LLM
 from crewai_tools import TavilySearchTool
+import litellm
 
-_llm = LLM(model="groq/llama-3.3-70b-versatile", api_key=os.getenv("GROQ_API_KEY"))
+_original_completion = litellm.completion
+
+def _sanitized_completion(*args, **kwargs):
+    messages = kwargs.get("messages")
+    if messages:
+        kwargs["messages"] = [
+            {k: v for k, v in m.items() if k != "cache_breakpoint"} if isinstance(m, dict) else m
+            for m in messages
+        ]
+    return _original_completion(*args, **kwargs)
+
+litellm.completion = _sanitized_completion
+_llm = LLM(model="groq/openai/gpt-oss-120b", api_key=os.getenv("GROQ_API_KEY"))
+_light_llm = LLM(model="groq/openai/gpt-oss-20b", api_key=os.getenv("GROQ_API_KEY"))
 _search_tool = TavilySearchTool()
 
 researcher = Agent(
@@ -31,7 +45,7 @@ fact_checker = Agent(
         "it goes to print. Flags anything uncertain rather than letting it slide."
     ),
     tools=[_search_tool],
-    llm=_llm,
+    llm=_light_llm,   # <- changed from _llm
     verbose=True,
 )
 

@@ -31,7 +31,7 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
 
 
-llm = ChatGroq(model="llama-3.3-70b-versatile", api_key=os.getenv("GROQ_API_KEY"))
+llm = ChatGroq(model="openai/gpt-oss-120b", api_key=os.getenv("GROQ_API_KEY"))
 llm_with_tools = llm.bind_tools(tools)
 
 
