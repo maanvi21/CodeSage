@@ -1,4 +1,4 @@
-# 🤖 CodeSage — Multi-Agent Orchestration
+# CodeSage — Multi-Agent Orchestration
 
 A collection of small, self-contained agentic AI projects, each exploring
 a different shape of agent built with **LangChain** and **LangGraph** —
@@ -13,9 +13,9 @@ what interface sits on top.
 
 ---
 
-## 📂 Projects
+## Projects
 
-### 🎙️ [`voice-assistant/`](./voice-assistant) — Voice Agent
+### [`voice-assistant/`](./voice-assistant) — Voice Agent
 A Siri-style, push-to-talk assistant. Hold a key, ask a question out loud,
 and it transcribes your speech locally, searches the web when it needs
 current information, and speaks the answer back.
@@ -28,7 +28,7 @@ current information, and speaks the answer back.
 
 ---
 
-### 📝 [`chatbot/`](./chatbot) — Notes & Reminders Agent
+### [`chatbot/`](./chatbot) — Notes & Reminders Agent
 A Streamlit chat assistant that manages real state — saving, listing, and
 deleting notes and reminders through tool calls the LLM decides to make
 on its own, with a live sidebar showing what's stored.
@@ -41,12 +41,12 @@ on its own, with a live sidebar showing what's stored.
 
 ---
 
-### 🗓️ [`agentic-calendar-notes/`](./agentic-calendar-notes)
+###  [`agentic-calendar-notes/`](./agentic-calendar-notes)
 *(Add a short description and screenshot here once this project's README is written.)*
 
 ---
 
-## 🧠 The shared pattern
+##  The shared pattern
 
 ```mermaid
 flowchart TD
@@ -68,7 +68,7 @@ read end to end.
 
 ---
 
-## 🚀 Getting started
+## Getting started
 
 Each project is self-contained with its own `requirements.txt` and `.env`.
 See each project's README for exact setup steps, but broadly:
