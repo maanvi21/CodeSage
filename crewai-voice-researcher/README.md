@@ -56,7 +56,7 @@ is one) lives on disk.
 | `crew/research_crew.py` | The CrewAI agents, tasks, and crew definition |
 | `report_utils.py` | Saves CrewAI reports as timestamped markdown files |
 | `reports/` | Output folder for saved reports |
-
+![alt text](image.png)
 ## Setup
 
 ```bash
