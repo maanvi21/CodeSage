@@ -1,0 +1,15 @@
+langchain>=0.3.0
+langgraph>=0.2.0
+langchain-groq>=0.2.0
+langchain-anthropic>=0.3.0
+langchain-openai>=0.2.0
+langchain-tavily>=0.1.0
+python-dotenv>=1.0.0
+typing-extensions>=4.12.0
+
+# voice stack
+openai-whisper>=20231117
+pyttsx3>=2.90
+sounddevice>=0.4.6
+numpy>=1.24.0
+keyboard>=0.13.5

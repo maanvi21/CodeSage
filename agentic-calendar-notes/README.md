@@ -4,6 +4,7 @@ A minimal agentic workflow: a chat assistant that can actually **do things**
 (save/list/delete notes and reminders) instead of just talking, with a
 Streamlit UI on top.
 ![alt text](image.png)
+![alt text](image-1.png)
 ## Files
 - `storage.py` — tiny JSON-file "database" for notes and reminders.
 - `tools.py` — LangChain `@tool` wrappers around storage.py. This is what
