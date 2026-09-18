@@ -14,25 +14,20 @@ question needs current information.
 
 ## One-time setup
 
-**1. Install ffmpeg** (required by Whisper to decode audio):
-- Windows: `choco install ffmpeg`, or download from ffmpeg.org and add
-  the `bin` folder to your PATH.
-- Mac: `brew install ffmpeg`
-- Linux: `sudo apt install ffmpeg`
-
-**2. Install Python dependencies:**
+**1. Install Python dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
+(`faster-whisper` needs no separate ffmpeg install — it decodes audio internally, unlike `openai-whisper`.)
 
-**3. Get a free Tavily key** at tavily.com and put it, plus your Groq key,
+**2. Get a free Tavily key** at tavily.com and put it, plus your Groq key,
 in `.env`:
 ```
 GROQ_API_KEY=gsk-your-key-here
 TAVILY_API_KEY=tvly-your-key-here
 ```
 
-**4. On Windows, run your terminal as Administrator** the first time —
+**3. On Windows, run your terminal as Administrator** the first time —
 the `keyboard` library needs elevated permissions to listen for the
 spacebar globally.
 
@@ -48,10 +43,13 @@ Press ESC (instead of holding SPACE) to quit.
 1. **`recorder.py`** — `sounddevice` streams raw audio into memory only
    while `keyboard.is_pressed("space")` is true. No wake word, no
    fixed-length recording — you control start/stop directly.
-2. **Whisper (speech-to-text)** — `whisper.load_model("base")` loads a
-   local model once at startup (no API key, runs on your CPU/GPU). Bigger
-   models (`small`, `medium`) are more accurate but slower — swap the
-   string in `voice_agent.py` if accuracy matters more than speed to you.
+2. **faster-whisper (speech-to-text)** — `WhisperModel("base", device="cpu",
+   compute_type="int8")` loads a local model once at startup (no API key,
+   runs on your CPU). It's a CTranslate2-based reimplementation of Whisper
+   that avoids the `numba`/`torch` dependency chain `openai-whisper` uses,
+   which is both faster and sidesteps some Windows driver-signing issues.
+   Bigger models (`small`, `medium`) are more accurate but slower — swap
+   the string in `voice_agent.py` if accuracy matters more than speed.
 3. **The LangGraph agent** — identical shape to `chatbot_with_tools.py`:
    a `chatbot` node calls the LLM, `tools_condition` checks if it asked to
    search the web, `TavilySearch` runs the query and returns results, and
@@ -68,8 +66,8 @@ Press ESC (instead of holding SPACE) to quit.
   up to a few seconds of pause before it speaks — cloud STT/TTS (e.g.
   OpenAI's Realtime API, ElevenLabs) would be faster and sound more
   natural, at the cost of money and an internet dependency for those steps.
-- **Accuracy**: Whisper `base` is fast but occasionally mishears; `small`
-  or `medium` trade speed for accuracy.
+- **Accuracy**: faster-whisper's `base` model is fast but occasionally
+  mishears; `small` or `medium` trade speed for accuracy.
 - **Voice quality**: pyttsx3 sounds like a classic OS text-to-speech voice,
   not a natural human voice. Swapping in ElevenLabs later is a drop-in
   change — same `speak()` function signature, different implementation.
@@ -82,3 +80,5 @@ Press ESC (instead of holding SPACE) to quit.
   hands-free use.
 - Stream the LLM's response into TTS sentence-by-sentence instead of
   waiting for the full reply, to cut perceived latency.
+
+  ![alt text](image.png)

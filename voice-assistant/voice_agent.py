@@ -1,10 +1,9 @@
 """
-Push-to-talk voice agent: mic -> Whisper (speech-to-text) -> LangGraph
-agent (with web search) -> pyttsx3 (text-to-speech).
+Push-to-talk voice agent: mic -> faster-whisper (speech-to-text) ->
+LangGraph agent (with web search) -> pyttsx3 (text-to-speech).
 
 Setup:
     pip install -r requirements.txt
-    Install ffmpeg (required by Whisper) and make sure it's on your PATH.
     Put GROQ_API_KEY and TAVILY_API_KEY in a .env file in this folder.
 
 Run:
@@ -13,7 +12,7 @@ Run:
 
 from langchain_core.messages import HumanMessage, SystemMessage
 import pyttsx3
-import whisper
+from faster_whisper import WhisperModel
 
 from recorder import record_on_spacebar, SAMPLE_RATE
 from agent import graph, SYSTEM_PROMPT
@@ -28,7 +27,7 @@ def speak(engine, text: str):
 
 def main():
     print("Loading Whisper model (this only happens once)...")
-    stt_model = whisper.load_model("base")  # try "small"/"medium" for better accuracy
+    stt_model = WhisperModel("base", device="cpu", compute_type="int8")
 
     tts_engine = pyttsx3.init()
     tts_engine.setProperty("rate", 175)
@@ -43,8 +42,8 @@ def main():
         if audio.size == 0:
             continue
 
-        result = stt_model.transcribe(audio, fp16=False)
-        user_text = result["text"].strip()
+        segments, _info = stt_model.transcribe(audio, beam_size=5)
+        user_text = " ".join(seg.text for seg in segments).strip()
         if not user_text:
             print("(didn't catch that, try again)")
             continue
